@@ -6,15 +6,9 @@ import plotly.graph_objects as go
 import joblib
 import time
 from datetime import datetime
-<<<<<<< HEAD
 import os
 import joblib
 import gdown
-=======
-
-import os
-import joblib
->>>>>>> 903456d (my changes)
 # -----------------------------
 # PAGE CONFIG
 # -----------------------------
