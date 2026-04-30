@@ -13,6 +13,19 @@ import gdown
 # PAGE CONFIG
 # -----------------------------
 
+
+st.set_page_config(
+    page_title="Your App Name",
+    page_icon="⚡"
+)
+
+# Inject meta tag into HTML
+st.markdown(
+    """
+    <meta name="google-site-verification" content="tz5-kBO0LJfrngnItmcgi2WKxWNruEmE2lnVrLG-__A" />
+    """,
+    unsafe_allow_html=True
+)
 st.set_page_config(
     page_title="GridPulse · National Load Forecasting",
     page_icon="⚡",
