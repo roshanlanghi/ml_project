@@ -6,12 +6,19 @@ import plotly.graph_objects as go
 import joblib
 import time
 from datetime import datetime
+<<<<<<< HEAD
+import os
+import joblib
+import gdown
+=======
 
 import os
 import joblib
+>>>>>>> 903456d (my changes)
 # -----------------------------
 # PAGE CONFIG
 # -----------------------------
+
 st.set_page_config(
     page_title="GridPulse · National Load Forecasting",
     page_icon="⚡",
@@ -352,8 +359,35 @@ section[data-testid="stSidebar"] button[kind="secondary"] {
 def load_data():
     return pd.read_csv("model_results.csv")
 
+@st.cache_data
+def load_raw_data():
+    """Load and preprocess the raw Excel data for display."""
+    df = pd.read_excel("hourlyLoadDataIndia.xlsx")
+    # Convert datetime columns to strings to avoid PyArrow serialization errors
+    for col in df.columns:
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            df[col] = df[col].astype(str)
+    return df
+
 @st.cache_resource
 def load_models():
+    # Google Drive File IDs provided by the user
+    drive_files = {
+        "Linear_Regression.pkl": "1qkIxenIIvkENGQPg2LgV-tLA0ImLh0kk",
+        "Random_Forest.pkl": "12QsWc4kRQ_hC9pBKcgb2VuiIVMYKfq9o",
+        "XGBoost.pkl": "1Rt5f5l9u7xWqTtLVI88GU2g7aJZo0LZK"
+    }
+
+    # Download models from Google Drive if they don't exist
+    for filename, file_id in drive_files.items():
+        if not os.path.exists(filename):
+            url = f'https://drive.google.com/uc?id={file_id}'
+            print(f"Downloading {filename} from Google Drive...")
+            try:
+                gdown.download(url, filename, quiet=False)
+            except Exception as e:
+                st.error(f"Failed to download {filename} from Google Drive. Ensure the link is set to 'Anyone with the link'. Error: {e}")
+
     lr  = joblib.load("Linear_Regression.pkl")
     rf  = joblib.load("Random_Forest.pkl")
     xgb = joblib.load("XGBoost.pkl")
@@ -936,7 +970,7 @@ elif page == "Dataset Info":
     
     try:
         # Load the Excel file
-        df = pd.read_excel("hourlyLoadDataIndia.xlsx")
+        df = load_raw_data()
         
         # Basic info
         num_rows, num_cols = df.shape
